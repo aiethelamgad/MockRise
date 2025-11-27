@@ -13,6 +13,7 @@ const {
 } = require('../../controllers/auth.controller');
 const { protect } = require('../../middlewares/auth.middleware');
 const tokenService = require('../../services/token.service');
+const urls = require('../../config/urls');
 
 const router = express.Router();
 
@@ -20,22 +21,20 @@ const router = express.Router();
  * Helper function for OAuth success redirect
  */
 const oauthSuccessHandler = (req, res) => {
+    const frontendUrl = urls.getFrontendUrl();
+    
     if (!req.user) {
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
         return res.redirect(`${frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent('OAuth authentication failed. Please try again.')}`);
     }
 
     // Check for OAuth errors (from passport callback)
     if (req.query.error) {
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
         const errorMessage = req.query.error_description || req.query.error || 'OAuth authentication failed';
         return res.redirect(`${frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent(errorMessage)}`);
     }
 
     const token = tokenService.createToken(req.user);
     tokenService.setTokenCookie(res, token);
-
-    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
     
     // Check if user needs role selection (new OAuth user without role)
     if (req.user.oauthRolePending) {
@@ -73,13 +72,13 @@ router.get('/google', (req, res, next) => {
         
         // Block admin roles
         if (isAdminRole(normalizedRole)) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_invalid_role&message=${encodeURIComponent('Admin roles cannot be assigned through OAuth sign-up.')}`);
         }
         
         // Validate role if provided
         if (!isAllowedOAuthRole(normalizedRole)) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_invalid_role&message=${encodeURIComponent(`Invalid role. Only 'trainee' and 'interviewer' roles are allowed.`)}`);
         }
         
@@ -119,7 +118,7 @@ router.get('/google/callback', (req, res, next) => {
     }, (err, user, info) => {
         if (err) {
             // Handle authentication errors (including role validation errors)
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             let errorMessage = 'OAuth authentication failed. Please try again.';
             
             if (err.message) {
@@ -137,7 +136,7 @@ router.get('/google/callback', (req, res, next) => {
         }
         
         if (!user) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent('OAuth authentication failed. Please try again.')}`);
         }
         
@@ -159,13 +158,13 @@ router.get('/github', (req, res, next) => {
         
         // Block admin roles
         if (isAdminRole(normalizedRole)) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_invalid_role&message=${encodeURIComponent('Admin roles cannot be assigned through OAuth sign-up.')}`);
         }
         
         // Validate role if provided
         if (!isAllowedOAuthRole(normalizedRole)) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_invalid_role&message=${encodeURIComponent(`Invalid role. Only 'trainee' and 'interviewer' roles are allowed.`)}`);
         }
         
@@ -205,7 +204,7 @@ router.get('/github/callback', (req, res, next) => {
     }, (err, user, info) => {
         if (err) {
             // Handle authentication errors (including role validation errors)
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             let errorMessage = 'OAuth authentication failed. Please try again.';
             
             if (err.message) {
@@ -223,7 +222,7 @@ router.get('/github/callback', (req, res, next) => {
         }
         
         if (!user) {
-            const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+            const frontendUrl = urls.getFrontendUrl();
             return res.redirect(`${frontendUrl}/login?error=oauth_failed&message=${encodeURIComponent('OAuth authentication failed. Please try again.')}`);
         }
         

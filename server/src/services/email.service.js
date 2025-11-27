@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const urls = require('../config/urls');
 
 /**
  * Create email transporter
@@ -37,14 +38,14 @@ const sendPasswordResetEmail = async ({ email, name, resetToken }) => {
         if (!transporter) {
             // Email not configured - log the reset link for development only
             if (process.env.NODE_ENV === 'development') {
-                const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+                const frontendUrl = urls.getFrontendUrl();
                 const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
                 console.warn('[Email] SMTP not configured. Reset link:', resetUrl);
             }
             return { messageId: 'dev-mode', accepted: [email] };
         }
 
-        const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:8080';
+        const frontendUrl = urls.getFrontendUrl();
         const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}`;
 
         const mailOptions = {

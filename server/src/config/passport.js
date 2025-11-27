@@ -4,6 +4,7 @@ const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
 const authService = require('../services/auth.service');
+const urls = require('./urls');
 
 /**
  * Generic OAuth Callback Handler
@@ -38,7 +39,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     passport.use('google', new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
         clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-        callbackURL: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/auth/google/callback`,
+        callbackURL: `${urls.getServerUrl()}/api/auth/google/callback`,
         passReqToCallback: true,
     }, (req, accessToken, refreshToken, profile, done) => {
         const roleFromQuery = req.roleFromState;
@@ -53,7 +54,7 @@ if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     passport.use('github', new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,
         clientSecret: process.env.GITHUB_CLIENT_SECRET,
-        callbackURL: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/auth/github/callback`,
+        callbackURL: `${urls.getServerUrl()}/api/auth/github/callback`,
         scope: ['user:email'],
         passReqToCallback: true,
     }, (req, accessToken, refreshToken, profile, done) => {

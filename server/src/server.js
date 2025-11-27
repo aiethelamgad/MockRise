@@ -26,10 +26,12 @@ validateEnv();
         const PORT = process.env.PORT || 5000;
         const NODE_ENV = process.env.NODE_ENV || 'development';
         
+        const urls = require('./config/urls');
+        
         server = app.listen(PORT, () => {
             // Display clean formatted startup log
             console.log('MockRise API server running');
-            console.log(`URL: http://localhost:${PORT}`);
+            console.log(`URL: ${urls.getServerUrl()}`);
             console.log(`Environment: ${NODE_ENV}`);
             console.log(`MongoDB Connected: ${dbConnection.host}`);
         });
