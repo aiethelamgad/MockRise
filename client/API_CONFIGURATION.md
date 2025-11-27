@@ -19,17 +19,22 @@ Set the `VITE_API_URL` environment variable in Vercel Dashboard:
    ```
    VITE_API_URL=https://mock-rise-server.vercel.app
    ```
-   **Note:** The `/api` suffix is automatically added by the configuration.
+   **Note:** 
+   - Use the base server URL (without `/api`)
+   - Endpoints already include `/api` prefix
+   - If you include `/api`, it will be automatically removed
 
 3. **Redeploy** the client after adding the variable
 
-### Option 2: Direct URL (Alternative)
+### Option 2: With /api (Also Works)
 
-If you want to specify the full API URL including `/api`:
+If you include `/api` in the URL, it will be automatically removed:
 
 ```
 VITE_API_URL=https://mock-rise-server.vercel.app/api
 ```
+
+Both formats work - the configuration handles it automatically.
 
 ## 📋 Environment Variables Checklist
 
