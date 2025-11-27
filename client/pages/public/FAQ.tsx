@@ -9,6 +9,7 @@ import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { PolicyModal } from "@/components/PolicyModal";
+import { ROUTES } from "@/routes/routes.config";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import {
   Search,
@@ -360,7 +361,7 @@ export default function FAQ() {
             <div className="container mx-auto px-4">
               <div className="grid md:grid-cols-5 gap-8 mb-8">
                 <div>
-                  <Link to="/" className="flex items-center space-x-2 group">
+                  <Link to={ROUTES.HOME} className="flex items-center space-x-2 group">
                     <div className="relative">
                       <Sparkles className="h-6 w-6 text-primary transition-all duration-300 group-hover:text-secondary group-hover:rotate-12" />
                       <div className="absolute inset-0 blur-lg bg-primary/20 group-hover:bg-secondary/30 transition-all duration-300 -z-10" />
@@ -406,9 +407,9 @@ export default function FAQ() {
                 <div>
                   <h4 className="font-semibold mb-4 text-lg">Resources</h4>
                   <ul className="space-y-2 text-sm text-muted-foreground">
-                    <li><Link to="/resources" className="hover:text-primary transition-colors">Resources</Link></li>
-                    {/* <li><Link to="/help" className="hover:text-primary transition-colors">Help Center</Link></li> */}
-                    <li><Link to="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
+                    <li><Link to={ROUTES.RESOURCES} className="hover:text-primary transition-colors">Resources</Link></li>
+                    {/* <li><Link to={ROUTES.HELP} className="hover:text-primary transition-colors">Help Center</Link></li> */}
+                    <li><Link to={ROUTES.FAQ} className="hover:text-primary transition-colors">FAQ</Link></li>
                   </ul>
                 </div>
 

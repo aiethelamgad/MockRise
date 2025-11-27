@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/contexts/AuthContext";
+import { ROUTES } from "@/routes/routes.config";
 
 import { useInterviewerStatusNotifications } from '@/hooks/useInterviewerStatusNotifications';
 import { usePendingInterviewerNotifications } from '@/hooks/usePendingInterviewerNotifications';
@@ -47,7 +48,7 @@ export function DashboardLayout() {
   }
 
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to={ROUTES.LOGIN} replace />;
   }
 
   const getDashboardConfig = () => {
@@ -70,7 +71,7 @@ export function DashboardLayout() {
       {/* Header */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
         <div className="container flex h-16 items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center space-x-2 group min-w-0">
+          <Link to={ROUTES.HOME} className="flex items-center space-x-2 group min-w-0">
             <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-primary transition-all duration-300 group-hover:rotate-12 flex-shrink-0" />
             <span className="text-lg sm:text-xl font-bold gradient-text truncate">MockRise</span>
           </Link>
@@ -104,11 +105,11 @@ export function DashboardLayout() {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => {
                   if (user.role === 'super_admin' || user.role === 'admin' || user.role === 'hr_admin') {
-                    navigate('/dashboard/admin/profile');
+                    navigate(ROUTES.ADMIN_PROFILE);
                   } else if (user.role === 'interviewer') {
-                    navigate('/dashboard/interviewer/settings/profile');
+                    navigate(`${ROUTES.INTERVIEWER_SETTINGS}/profile`);
                   } else {
-                    navigate('/dashboard/trainee/settings/profile');
+                    navigate(`${ROUTES.TRAINEE_SETTINGS}/profile`);
                   }
                 }}>
                   <User className="mr-2 h-4 w-4" />
@@ -116,8 +117,11 @@ export function DashboardLayout() {
                 </DropdownMenuItem>
                 {(user.role === 'trainee' || user.role === 'interviewer') && (
                   <DropdownMenuItem onClick={() => {
-                    const rolePath = user.role === 'interviewer' ? 'interviewer' : 'trainee';
-                    navigate(`/dashboard/${rolePath}/settings`);
+                    if (user.role === 'interviewer') {
+                      navigate(ROUTES.INTERVIEWER_SETTINGS);
+                    } else {
+                      navigate(ROUTES.TRAINEE_SETTINGS);
+                    }
                   }}>
                     <Settings className="mr-2 h-4 w-4" />
                     Settings

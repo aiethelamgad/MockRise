@@ -125,7 +125,7 @@ export default function RescheduleSession() {
       toast.success("Session rescheduled successfully!");
       // Invalidate sessions query to refresh the list
       queryClient.invalidateQueries({ queryKey: ["userSessions"] });
-      navigate("/dashboard/trainee/sessions");
+      navigate(ROUTES.TRAINEE_SESSIONS);
     },
     onError: (error: Error) => {
       toast.error(error.message || "Failed to reschedule session. Please try again.");
@@ -280,7 +280,7 @@ export default function RescheduleSession() {
           <p className="text-muted-foreground mb-4">
             The session you're looking for doesn't exist or you don't have access to it.
           </p>
-          <Button onClick={() => navigate("/dashboard/trainee/sessions")}>
+          <Button onClick={() => navigate(ROUTES.TRAINEE_SESSIONS)}>
             Back to Sessions
           </Button>
         </Card>
@@ -297,7 +297,7 @@ export default function RescheduleSession() {
           <p className="text-muted-foreground mb-4">
             This session cannot be rescheduled because it is {session.status === 'completed' ? 'already completed' : 'cancelled'}.
           </p>
-          <Button onClick={() => navigate("/dashboard/trainee/sessions")}>
+          <Button onClick={() => navigate(ROUTES.TRAINEE_SESSIONS)}>
             Back to Sessions
           </Button>
         </Card>
@@ -311,7 +311,7 @@ export default function RescheduleSession() {
       <div>
         <Button
           variant="ghost"
-          onClick={() => navigate("/dashboard/trainee/sessions")}
+          onClick={() => navigate(ROUTES.TRAINEE_SESSIONS)}
           className="mb-4"
           size="sm"
         >

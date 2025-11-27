@@ -4,6 +4,7 @@ import { ThreeDScene } from "./ThreeDScene";
 import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { useNavigate } from "react-router-dom";
 import { Play, BookOpen, Sparkles, Brain, Target, Zap } from "lucide-react";
+import { ROUTES } from "@/routes/routes.config";
 
 export function Hero3D() {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ export function Hero3D() {
             <EnhancedButton
               size="lg"
               className="text-lg px-8 py-4 bg-gradient-primary hover:opacity-90 transition-all duration-300"
-              onClick={() => navigate("/login")}
+              onClick={() => navigate(ROUTES.LOGIN)}
             >
               <Play className="h-5 w-5 mr-2" />
               Start Practicing
@@ -121,7 +122,7 @@ export function Hero3D() {
               variant="outline"
               size="lg"
               className="text-lg px-8 py-4 bg-background/20 backdrop-blur-sm border-border/50 hover:bg-primary/10 hover:text-primary"
-              onClick={() => navigate("/resources")}
+              onClick={() => navigate(ROUTES.RESOURCES)}
             >
               <BookOpen className="h-5 w-5 mr-2" />
               Learn More

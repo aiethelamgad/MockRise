@@ -4,6 +4,7 @@ import { PolicyModal } from '@/components/PolicyModal';
 import { useState } from 'react';
 import { motion } from "framer-motion";
 import { useSectionNavigation } from "@/hooks/useSectionNavigation";
+import { ROUTES } from "@/routes/routes.config";
 
 export function Footer() {
   const [showPrivacy, setShowPrivacy] = useState(false);
@@ -16,7 +17,7 @@ export function Footer() {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-5 gap-8 mb-8">
             <div>
-              <Link to="/" className="flex items-center space-x-2 group">
+              <Link to={ROUTES.HOME} className="flex items-center space-x-2 group">
                 <div className="relative">
                   <Sparkles className="h-6 w-6 text-primary transition-all duration-300 group-hover:text-secondary group-hover:rotate-12" />
                   <div className="absolute inset-0 blur-lg bg-primary/20 group-hover:bg-secondary/30 transition-all duration-300 -z-10" />

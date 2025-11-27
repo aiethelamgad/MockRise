@@ -19,6 +19,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes/routes.config";
 import { format, parseISO, isSameDay, startOfDay, isPast, isToday, isTomorrow } from "date-fns";
 import {
   interviewerInterviewService,
@@ -214,7 +215,7 @@ export default function InterviewerCalendar() {
   };
 
   const handleManageAvailability = () => {
-    navigate("/dashboard/interviewer/availability");
+    navigate(ROUTES.INTERVIEWER_AVAILABILITY);
   };
 
   return (

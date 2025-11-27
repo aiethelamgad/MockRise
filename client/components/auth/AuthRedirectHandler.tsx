@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
+import { ROUTES } from '@/routes/routes.config';
 
 /**
  * Component to handle automatic redirects based on user authentication status
@@ -13,8 +14,15 @@ export function AuthRedirectHandler() {
 
   useEffect(() => {
     // Skip redirect handling on public routes (like landing page)
-    const isPublicRoute = ['/', '/login', '/pricing', '/resources', '/faq', '/forgot-password'].includes(location.pathname) || 
-                          location.pathname.startsWith('/reset-password/');
+    const isPublicRoute = [
+      ROUTES.HOME,
+      ROUTES.LOGIN,
+      ROUTES.PRICING,
+      ROUTES.RESOURCES,
+      ROUTES.FAQ,
+      ROUTES.FORGOT_PASSWORD
+    ].includes(location.pathname) || 
+    location.pathname.startsWith(ROUTES.RESET_PASSWORD);
     
     if (isPublicRoute) {
       return; // Don't process redirects on public routes
@@ -32,10 +40,10 @@ export function AuthRedirectHandler() {
     // Skip redirect if already on these pages (allow normal navigation)
     // Also skip dashboard pages - they have their own guards
     const skipRedirectPages = [
-      '/rejected-notice',
-      '/pending-verification',
-      '/login',
-      '/oauth/select-role',
+      ROUTES.REJECTED_NOTICE,
+      ROUTES.PENDING_VERIFICATION,
+      ROUTES.LOGIN,
+      ROUTES.OAUTH_ROLE_SELECTION,
     ];
 
     // Skip if on any dashboard route - dashboard routes have their own guards
@@ -49,19 +57,19 @@ export function AuthRedirectHandler() {
 
     // Handle OAuth role selection - redirect if user needs to select role
     if (user.oauthRolePending) {
-      navigate('/oauth/select-role', { replace: true });
+      navigate(ROUTES.OAUTH_ROLE_SELECTION, { replace: true });
       return;
     }
 
     // Handle rejected interviewer redirect - ALWAYS redirect to rejected notice
     if (user.role === 'interviewer' && user.status === 'rejected') {
-      navigate('/rejected-notice', { replace: true });
+      navigate(ROUTES.REJECTED_NOTICE, { replace: true });
       return;
     }
 
     // Handle pending interviewer redirect
     if (user.role === 'interviewer' && user.status === 'pending_verification') {
-      navigate('/pending-verification', { replace: true });
+      navigate(ROUTES.PENDING_VERIFICATION, { replace: true });
       return;
     }
   }, [user, loading, navigate, location.pathname]);

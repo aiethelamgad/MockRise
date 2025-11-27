@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import { User, Bell, Shield, Globe, Upload, LogOut, Trash2, AlertTriangle, Link as LinkIcon } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "@/routes/routes.config";
 
 export default function DashboardSettings() {
   const navigate = useNavigate();
@@ -23,13 +24,13 @@ export default function DashboardSettings() {
 
   const handleLogout = () => {
     toast.success("Logged out successfully!");
-    navigate("/");
+    navigate(ROUTES.HOME);
   };
 
   const handleDeleteAccount = () => {
     toast.success("Account deletion initiated. You will receive an email confirmation.");
     setShowDeleteDialog(false);
-    navigate("/");
+    navigate(ROUTES.HOME);
   };
 
   return (

@@ -32,6 +32,7 @@ export const ROUTES = {
     INTERVIEWER_DASHBOARD: '/dashboard/interviewer',
     INTERVIEWER_ASSIGNED: '/dashboard/interviewer/assigned',
     INTERVIEWER_CALENDAR: '/dashboard/interviewer/calendar',
+    INTERVIEWER_AVAILABILITY: '/dashboard/interviewer/availability',
     INTERVIEWER_QUESTIONS: '/dashboard/interviewer/questions',
     INTERVIEWER_FEEDBACK: '/dashboard/interviewer/feedback',
     INTERVIEWER_STATS: '/dashboard/interviewer/stats',

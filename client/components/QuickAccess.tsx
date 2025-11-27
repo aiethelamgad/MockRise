@@ -10,6 +10,7 @@ import {
   Palette,
   ChevronRight,
 } from "lucide-react";
+import { ROUTES } from "@/routes/routes.config";
 
 export function QuickAccess() {
   const navigate = useNavigate();
@@ -19,35 +20,35 @@ export function QuickAccess() {
       title: "Admin Dashboard",
       description: "Manage users and platform settings",
       icon: Shield,
-      href: "/admin",
+      href: ROUTES.ADMIN_DASHBOARD,
       color: "text-destructive",
     },
     {
       title: "Interviewer Dashboard",
       description: "Manage interview sessions",
       icon: Users,
-      href: "/interviewer",
+      href: ROUTES.INTERVIEWER_DASHBOARD,
       color: "text-primary",
     },
     {
       title: "Resources",
       description: "Learning materials and guides",
       icon: BookOpen,
-      href: "/resources",
+      href: ROUTES.RESOURCES,
       color: "text-accent",
     },
     {
       title: "Help Center",
       description: "Get support and find answers",
       icon: HelpCircle,
-      href: "/help",
+      href: ROUTES.FAQ, // Using FAQ as help center
       color: "text-secondary",
     },
     {
       title: "Style Guide",
       description: "Design system documentation",
       icon: Palette,
-      href: "/style-guide",
+      href: ROUTES.STYLE_GUIDE,
       color: "text-warning",
     },
   ];

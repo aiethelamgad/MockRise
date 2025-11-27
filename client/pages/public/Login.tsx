@@ -16,6 +16,8 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { AuthBackground } from "@/components/auth/auth-background";
 import { authService } from "@/services/auth.service";
 import { SKILL_TREE } from "@/config/skillTree";
+import { ROUTES } from "@/routes/routes.config";
+import { getDashboardPath } from "@/utils/routing";
 
 export default function Login() {
   const { login, register, user, loading, logout, fetchUser } = useAuth();
@@ -72,7 +74,7 @@ export default function Login() {
       const message = errorMessage || 'OAuth authentication failed. Please try again.';
       toast.error(message);
       // Clear the error parameters from URL
-      navigate('/login?signup=' + (isSignupMode ? 'true' : 'false'), { replace: true });
+      navigate(`${ROUTES.LOGIN}?signup=${isSignupMode ? 'true' : 'false'}`, { replace: true });
     }
   }, [searchParams, navigate, isSignupMode]);
 
@@ -83,7 +85,7 @@ export default function Login() {
     if (passwordResetSuccess) {
       toast.success("Password reset successful! Please log in with your new password.");
       // Clear the parameter
-      navigate('/login', { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
     }
   }, [searchParams, navigate]);
 
@@ -97,12 +99,12 @@ export default function Login() {
     if (user && !loading) {
       // Rejected interviewers should always go to rejected notice
       if (user.role === 'interviewer' && user.status === 'rejected') {
-        navigate('/rejected-notice', { replace: true });
+        navigate(ROUTES.REJECTED_NOTICE, { replace: true });
         return;
       }
       // Pending interviewers should go to pending verification
       if (user.role === 'interviewer' && user.status === 'pending_verification') {
-        navigate('/pending-verification', { replace: true });
+        navigate(ROUTES.PENDING_VERIFICATION, { replace: true });
         return;
       }
       // Skip redirect for rejected users trying to re-apply (they should stay on signup)
@@ -111,8 +113,8 @@ export default function Login() {
       }
       // Otherwise, redirect to appropriate dashboard
       if (!isSignupMode) {
-        const rolePath = user.role === 'super_admin' ? 'admin' : user.role;
-        navigate(`/dashboard/${rolePath}`, { replace: true });
+        const dashboardPath = getDashboardPath(user.role);
+        navigate(dashboardPath, { replace: true });
       }
     }
   }, [user, navigate, loading, isSignupMode, isSignup, location.state]);
@@ -274,7 +276,7 @@ export default function Login() {
           setIsSignupMode(false);
           
           // Update URL to login mode (remove signup query param) - stay on same page
-          navigate("/login", { replace: true });
+          navigate(ROUTES.LOGIN, { replace: true });
           
           // Return early to prevent navigation to dashboard
           return;
@@ -285,8 +287,8 @@ export default function Login() {
           if (redirectPath) {
             navigate(redirectPath);
           } else {
-            const rolePath = user?.role === 'super_admin' ? 'admin' : user?.role || 'trainee';
-            navigate(`/dashboard/${rolePath}`);
+            const dashboardPath = getDashboardPath(user?.role || 'trainee');
+            navigate(dashboardPath);
           }
           return;
         }
@@ -305,8 +307,8 @@ export default function Login() {
           navigate(redirectPath);
         } else {
           // Fallback: navigate based on user role from context
-          const rolePath = user?.role === 'super_admin' ? 'admin' : user?.role || 'trainee';
-          navigate(`/dashboard/${rolePath}`);
+          const dashboardPath = getDashboardPath(user?.role || 'trainee');
+          navigate(dashboardPath);
         }
       }
 
@@ -362,7 +364,7 @@ export default function Login() {
         >
           <GlassCard>
             <Link
-              to="/"
+              to={ROUTES.HOME}
               className="flex items-center justify-center space-x-2 mb-8 group"
             >
               <motion.div
@@ -520,7 +522,7 @@ export default function Login() {
 
               {!isSignupMode && (
                 <div className="flex items-center justify-end">
-                  <Link to="/forgot-password">
+                  <Link to={ROUTES.FORGOT_PASSWORD}>
                     <EnhancedButton
                       type="button"
                       variant="link"

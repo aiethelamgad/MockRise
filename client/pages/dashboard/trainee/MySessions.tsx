@@ -323,7 +323,7 @@ export default function MySessions() {
                                   variant="outline"
                                   size="sm"
                                   onClick={() => {
-                                    navigate(`/dashboard/trainee/sessions/${session._id}/reschedule`);
+                                    navigate(`${ROUTES.TRAINEE_SESSIONS}/${session._id}/reschedule`);
                                   }}
                                 >
                                   <CalendarClock className="h-4 w-4 mr-2" />
@@ -332,19 +332,8 @@ export default function MySessions() {
                                 <Button
                                   size="sm"
                                   onClick={() => {
-                                    // Navigate to session detail/start page based on mode
-                                    if (session.mode === "ai") {
-                                      navigate(`/dashboard/trainee/sessions/${session._id}`);
-                                    } else if (session.mode === "live" || session.mode === "family") {
-                                      // For live and family sessions, navigate to session screen
-                                      navigate(`/dashboard/trainee/sessions/${session._id}`);
-                                    } else if (session.mode === "peer") {
-                                      // For peer-to-peer, navigate to matching/waiting room
-                                      navigate(`/dashboard/trainee/sessions/${session._id}`);
-                                    } else {
-                                      // Default fallback
-                                      navigate(`/dashboard/trainee/sessions/${session._id}`);
-                                    }
+                                    // Navigate to session detail/start page
+                                    navigate(`${ROUTES.TRAINEE_SESSIONS}/${session._id}`);
                                   }}
                                   className="bg-gradient-primary text-primary-foreground text-xs sm:text-sm"
                                 >
@@ -357,7 +346,7 @@ export default function MySessions() {
                               <Button
                                 size="sm"
                                 onClick={() => {
-                                  navigate(`/dashboard/trainee/sessions/${session._id}`);
+                                  navigate(`${ROUTES.TRAINEE_SESSIONS}/${session._id}`);
                                 }}
                                 className="bg-gradient-primary text-primary-foreground text-xs sm:text-sm"
                               >
@@ -460,7 +449,7 @@ export default function MySessions() {
                                       });
                                     } else {
                                       // For other modes, show session details
-                                      navigate(`/dashboard/trainee/sessions/${session._id}`);
+                                      navigate(`${ROUTES.TRAINEE_SESSIONS}/${session._id}`);
                                     }
                                   }}
                     >

@@ -16,9 +16,13 @@ const validateToken = (token) => {
 
 /**
  * Get redirect path based on user role and status
+ * Handles all admin role variants (admin, super_admin, hr_admin)
  */
 const getRedirectPath = (role, status) => {
-    switch (role) {
+    // Normalize admin roles to 'admin' for routing
+    const normalizedRole = role === 'super_admin' || role === 'hr_admin' ? 'admin' : role;
+    
+    switch (normalizedRole) {
         case 'admin':
             return '/dashboard/admin';
         case 'interviewer':

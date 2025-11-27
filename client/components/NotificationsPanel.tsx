@@ -10,6 +10,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { notificationService } from "@/services/notification.service";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { ROUTES } from "@/routes/routes.config";
 
 export function NotificationsPanel() {
   const [isOpen, setIsOpen] = useState(false);
@@ -38,16 +39,17 @@ export function NotificationsPanel() {
   };
 
   const getNotificationsRoute = () => {
-    if (!user) return "/dashboard/trainee/notifications";
+    if (!user) return ROUTES.TRAINEE_NOTIFICATIONS;
     switch (user.role) {
       case "admin":
-        return "/dashboard/admin/notifications";
+      case "super_admin":
+      case "hr_admin":
+        return ROUTES.ADMIN_NOTIFICATIONS;
       case "interviewer":
-        return "/dashboard/interviewer/notifications";
+        return ROUTES.INTERVIEWER_NOTIFICATIONS;
       case "trainee":
-        return "/dashboard/trainee/notifications";
       default:
-        return "/dashboard/trainee/notifications";
+        return ROUTES.TRAINEE_NOTIFICATIONS;
     }
   };
 
@@ -194,7 +196,7 @@ export function NotificationsPanel() {
                               // If notification is about pending interviewers, navigate to that page
                               if (notification.title.toLowerCase().includes('pending interviewer')) {
                                 setIsOpen(false);
-                                navigate('/dashboard/admin/pending-interviewers');
+                                navigate(ROUTES.ADMIN_PENDING_INTERVIEWERS);
                               }
                             }
                           }}
