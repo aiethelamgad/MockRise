@@ -6,7 +6,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
 import { useAuth } from "@/contexts/AuthContext";
-import { getDashboardRoute } from "@/utils/routing";
+import { getDashboardPath } from "@/utils/routing";
 import { useSectionNavigation } from "@/hooks/useSectionNavigation";
 import {
   DropdownMenu,
@@ -24,7 +24,7 @@ export function Navbar() {
   const activeSection = useScrollSpy(['features', 'how-it-works', 'testimonials', 'resources', 'about', 'contact']);
   
   // Get dashboard route based on user role
-  const dashboardRoute = user ? getDashboardRoute(user.role) : null;
+  const dashboardRoute = user ? getDashboardPath(user.role) : null;
 
   // On landing page, treat rejected or pending users as not signed in for navbar purposes
   const isLandingPage = location.pathname === '/';
