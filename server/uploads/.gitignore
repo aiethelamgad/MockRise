@@ -1,0 +1,5 @@
+# Ignore all uploaded files
+resumes/*
+# But keep the directory structure
+!resumes/.gitkeep
+

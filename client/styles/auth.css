@@ -1,0 +1,13 @@
+.glass-input {
+  @apply bg-white/10 border-white/20 backdrop-blur-sm;
+  @apply hover:bg-white/20 focus:bg-white/20;
+  @apply transition-all duration-200;
+  @apply placeholder:text-white/50;
+}
+
+.glass-button {
+  @apply bg-primary/80 hover:bg-primary/90;
+  @apply backdrop-blur-sm transition-all duration-200;
+  @apply disabled:bg-gray-500/50 disabled:cursor-not-allowed;
+  @apply active:scale-[0.98];
+}

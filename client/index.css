@@ -1,0 +1,234 @@
+/* stylelint-disable at-rule-no-unknown */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* stylelint-enable at-rule-no-unknown */
+
+
+/* MockRise Design System - Professional Interview Platform */
+
+@layer base {
+  :root {
+    /* Base colors */
+    --background: 0 0% 100%;
+    --foreground: 220 15% 15%;
+
+    /* Brand colors - Professional blues and purples */
+    --primary: 239 84% 60%;
+    --primary-foreground: 0 0% 100%;
+    --primary-glow: 239 84% 67%;
+
+    --secondary: 265 75% 65%;
+    --secondary-foreground: 0 0% 100%;
+
+    --accent: 158 64% 52%;
+    --accent-foreground: 0 0% 100%;
+
+    /* UI colors */
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 15%;
+
+    --muted: 220 13% 95%;
+    --muted-foreground: 220 9% 46%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 239 84% 60%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 43 96% 56%;
+    --warning-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 220 15% 15%;
+    --sidebar-primary: 239 84% 60%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 13% 95%;
+    --sidebar-accent-foreground: 220 15% 15%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 239 84% 60%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(239 84% 60%) 0%, hsl(265 75% 65%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 64% 52%) 0%, hsl(239 84% 60%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(0 0% 100%) 0%, hsl(239 84% 98%) 100%);
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(220 15% 15% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(220 15% 15% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(220 15% 15% / 0.1);
+    --shadow-xl: 0 20px 25px -5px hsl(220 15% 15% / 0.1);
+    --shadow-glow: 0 0 30px hsl(239 84% 60% / 0.3);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 220 20% 10%;
+    --foreground: 220 10% 95%;
+
+    --primary: 239 84% 67%;
+    --primary-foreground: 220 20% 10%;
+    --primary-glow: 239 84% 75%;
+
+    --secondary: 265 75% 70%;
+    --secondary-foreground: 220 20% 10%;
+
+    --accent: 158 64% 58%;
+    --accent-foreground: 220 20% 10%;
+
+    --card: 220 18% 14%;
+    --card-foreground: 220 10% 95%;
+
+    --popover: 220 18% 14%;
+    --popover-foreground: 220 10% 95%;
+
+    --muted: 220 15% 20%;
+    --muted-foreground: 220 10% 60%;
+
+    --border: 220 15% 20%;
+    --input: 220 15% 20%;
+    --ring: 239 84% 67%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --success: 158 64% 52%;
+    --success-foreground: 0 0% 100%;
+
+    --warning: 43 96% 56%;
+    --warning-foreground: 0 0% 100%;
+
+    --sidebar-background: 220 20% 12%;
+    --sidebar-foreground: 220 10% 95%;
+    --sidebar-primary: 239 84% 67%;
+    --sidebar-primary-foreground: 220 20% 10%;
+    --sidebar-accent: 220 15% 18%;
+    --sidebar-accent-foreground: 220 10% 95%;
+    --sidebar-border: 220 15% 20%;
+    --sidebar-ring: 239 84% 67%;
+
+    --gradient-primary: linear-gradient(135deg, hsl(239 84% 67%) 0%, hsl(265 75% 70%) 100%);
+    --gradient-accent: linear-gradient(135deg, hsl(158 64% 58%) 0%, hsl(239 84% 67%) 100%);
+    --gradient-hero: linear-gradient(180deg, hsl(220 20% 10%) 0%, hsl(239 84% 15%) 100%);
+
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.3);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.4);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.5);
+    --shadow-xl: 0 20px 25px -5px hsl(0 0% 0% / 0.6);
+    --shadow-glow: 0 0 30px hsl(239 84% 67% / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+  }
+
+  /* Add standard appearance property alongside vendor prefixes for compatibility */
+  button,
+  input:where([type=button]),
+  input:where([type=reset]),
+  input:where([type=submit]) {
+    appearance: button;
+  }
+
+  [type=search] {
+    appearance: textfield;
+  }
+
+  ::-webkit-search-decoration {
+    appearance: none;
+  }
+
+  ::-webkit-file-upload-button {
+    appearance: button;
+  }
+}
+
+@layer components {
+
+  /* Hero section styles */
+  .hero-gradient {
+    background: var(--gradient-hero);
+  }
+
+  /* Glass morphism effect */
+  .glass {
+    background-color: hsl(var(--background) / 0.8);
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    border-width: 1px;
+    border-style: solid;
+    border-color: hsl(var(--border) / 0.5);
+  }
+
+  /* Animated gradient text */
+  .gradient-text {
+    background-image: linear-gradient(90deg, hsl(var(--primary)) 0%, hsl(var(--secondary)) 50%, hsl(var(--accent)) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Hover lift effect */
+  .hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    &:hover {
+      transform: translateY(-0.25rem);
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  /* Glow effect */
+  .glow {
+    box-shadow: var(--shadow-glow);
+  }
+
+  /* Smooth scroll */
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  .keen-slider {
+    display: flex;
+    overflow-x: hidden;
+  }
+
+  .keen-slider__slide {
+    flex-shrink: 0;
+  }
+
+}
+
