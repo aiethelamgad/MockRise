@@ -16,9 +16,17 @@ class ApiClient {
     ): Promise<T> {
         const url = `${this.baseURL}${endpoint}`;
         
+        // Get token from localStorage (for cross-origin cookie issues)
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+        
         const defaultHeaders: HeadersInit = {
             'Content-Type': 'application/json',
         };
+
+        // Add Authorization header if token exists
+        if (token) {
+            defaultHeaders['Authorization'] = `Bearer ${token}`;
+        }
 
         const config: RequestInit = {
             ...options,
@@ -26,7 +34,7 @@ class ApiClient {
                 ...defaultHeaders,
                 ...options.headers,
             },
-            credentials: 'include', // Always include credentials for cookies
+            credentials: 'include', // Always include credentials for cookies (fallback)
         };
 
         try {

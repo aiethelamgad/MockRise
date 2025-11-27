@@ -70,6 +70,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // Prevent duplicate fetches
     if (loading) return;
 
+    // Check if token exists before making request
+    const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+    if (!token) {
+      setUser(null);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await authService.getMe();
@@ -86,12 +94,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         });
       } else {
         setUser(null);
+        // Clear invalid token
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
       }
     } catch (error: any) {
       // Handle 401 errors gracefully - user is not authenticated
       // This is expected if user hasn't logged in yet
       if (error.statusCode === 401) {
         setUser(null);
+        // Clear invalid token
+        if (typeof window !== 'undefined') {
+          localStorage.removeItem('auth_token');
+        }
       } else {
         // For other errors, also clear user state
         setUser(null);
@@ -130,6 +146,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     const data = await authService.login({ email, password });
 
+    // Store token in localStorage for cross-origin requests
+    // Cookies don't work across different domains (frontend vs backend)
+    if (data.token && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', data.token);
+    }
+
     // After successful login, fetch fresh user data from server
     // This ensures we have the latest user state
     if (data.user) {
@@ -156,6 +178,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (formData: RegisterData) => {
     const data = await authService.register(formData);
+
+    // Store token in localStorage for cross-origin requests
+    // Cookies don't work across different domains (frontend vs backend)
+    if (data.token && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', data.token);
+    }
 
     // After successful registration, fetch fresh user data from server
     // This ensures we have the latest user state
@@ -188,6 +216,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Logout errors are non-critical - silently handle
     } finally {
       setUser(null);
+      // Clear token from localStorage
+      if (typeof window !== 'undefined') {
+        localStorage.removeItem('auth_token');
+      }
     }
   };
 
