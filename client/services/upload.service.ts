@@ -1,5 +1,6 @@
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/endpoints';
+import { config } from '@/config/env';
 
 export interface UploadResumeResponse {
     success: boolean;
@@ -22,8 +23,7 @@ export const uploadService = {
         const formData = new FormData();
         formData.append('resume', file);
 
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        const response = await fetch(`${baseUrl}${API_ENDPOINTS.upload.resume}`, {
+        const response = await fetch(`${config.apiUrl}${API_ENDPOINTS.upload.resume}`, {
             method: 'POST',
             body: formData,
             credentials: 'include', // Include cookies for authentication if needed
@@ -41,8 +41,7 @@ export const uploadService = {
      * Get resume URL
      */
     getResumeUrl(filename: string): string {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-        return `${baseUrl}${API_ENDPOINTS.upload.getResume(filename)}`;
+        return `${config.apiUrl}${API_ENDPOINTS.upload.getResume(filename)}`;
     },
 };
 

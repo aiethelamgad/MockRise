@@ -15,6 +15,7 @@ import { resourceService, Resource, DifficultyLevel } from "@/services/resource.
 import { HierarchicalFilter } from "@/components/resources/HierarchicalFilter";
 import { ResourceCard } from "@/components/resources/ResourceCard";
 import { getCloudinaryThumbnail, SKILL_TREE, CategoryName } from "@/config/skillTree";
+import { config } from "@/config/env";
 import {
   Search,
   Filter,
@@ -223,7 +224,7 @@ export default function Resources() {
     }
 
     // If it's a relative URL, make it absolute using the backend URL
-    const backendUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const backendUrl = config.apiUrl;
     return `${backendUrl}${url.startsWith('/') ? url : '/' + url}`;
   };
 

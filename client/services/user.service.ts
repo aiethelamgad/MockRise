@@ -1,5 +1,6 @@
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/endpoints';
+import { config } from '@/config/env';
 
 export interface User {
     _id: string;
@@ -152,7 +153,7 @@ export const userService = {
         const queryString = queryParams.toString();
         const url = queryString ? `${API_ENDPOINTS.users.export}?${queryString}` : API_ENDPOINTS.users.export;
 
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:5000'}${url}`, {
+        const response = await fetch(`${config.apiUrl}${url}`, {
             method: 'GET',
             credentials: 'include',
         });

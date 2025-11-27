@@ -8,6 +8,7 @@ import { interviewerService, PendingInterviewer } from '@/services/interviewer.s
 import { toast } from 'sonner';
 import { useNotifications } from '@/contexts/NotificationContext';
 import { uploadService } from '@/services/upload.service';
+import { config } from '@/config/env';
 import {
   Clock,
   CheckCircle2,
@@ -29,7 +30,7 @@ export default function PendingInterviewersPage() {
 
   // Helper function to get resume URL
   const getResumeUrl = (resume: string): string => {
-    const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+    const baseUrl = config.apiUrl;
     
     // If resume is already a full URL, return it
     if (resume.startsWith('http://') || resume.startsWith('https://')) {

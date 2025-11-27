@@ -1,5 +1,6 @@
 import { apiClient } from './api/client';
 import { API_ENDPOINTS } from './api/endpoints';
+import { config } from '@/config/env';
 
 export interface RegisterData {
     name: string;
@@ -90,7 +91,7 @@ export const authService = {
      * Role parameter is optional - if not provided, user will select role after OAuth
      */
     getOAuthUrl(provider: 'google' | 'github', role?: string): string {
-        const baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+        const baseUrl = config.apiUrl;
         const endpoint = provider === 'google' 
             ? API_ENDPOINTS.auth.google 
             : API_ENDPOINTS.auth.github;
