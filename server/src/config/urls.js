@@ -5,26 +5,34 @@
  * Automatically switches between development and production URLs.
  */
 
-const isDevelopment = process.env.NODE_ENV !== 'production';
-const isProduction = process.env.NODE_ENV === 'production';
+// Detect environment - check multiple indicators
+const isDevelopment = process.env.NODE_ENV !== 'production' && !process.env.VERCEL;
+const isProduction = process.env.NODE_ENV === 'production' || !!process.env.VERCEL;
 
 /**
  * Get server (backend) URL
  * @returns {string} Server URL
  */
 const getServerUrl = () => {
-    // Check for explicit BACKEND_URL or SERVER_URL
+    // Check for explicit BACKEND_URL or SERVER_URL (highest priority)
     const backendUrl = process.env.BACKEND_URL || process.env.SERVER_URL;
     
     if (backendUrl) {
         return backendUrl.replace(/\/$/, ''); // Remove trailing slash
     }
     
-    if (isProduction) {
-        // Production: Use Vercel deployment URL or default
+    // If Vercel environment is detected, use production URL
+    if (process.env.VERCEL || process.env.VERCEL_URL) {
+        // Use VERCEL_URL if available (includes deployment-specific domain)
+        // Otherwise use the default production domain
         return process.env.VERCEL_URL 
             ? `https://${process.env.VERCEL_URL}`
             : 'https://mock-rise-server.vercel.app';
+    }
+    
+    // Check NODE_ENV for production
+    if (process.env.NODE_ENV === 'production') {
+        return 'https://mock-rise-server.vercel.app';
     }
     
     // Development fallback
@@ -43,8 +51,8 @@ const getFrontendUrl = () => {
         return frontendUrl.replace(/\/$/, ''); // Remove trailing slash
     }
     
-    if (isProduction) {
-        // Production default
+    // If Vercel environment is detected, use production URL
+    if (process.env.VERCEL || process.env.NODE_ENV === 'production') {
         return 'https://mock-rise.vercel.app';
     }
     

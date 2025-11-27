@@ -38,6 +38,7 @@ const logger = require('../utils/logger');
 if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
     const googleCallbackURL = `${urls.getServerUrl()}/api/auth/google/callback`;
     logger.info(`[OAuth] Google callback URL: ${googleCallbackURL}`);
+    logger.info(`[OAuth] Environment: NODE_ENV=${process.env.NODE_ENV}, VERCEL=${process.env.VERCEL}, VERCEL_URL=${process.env.VERCEL_URL}`);
     
     passport.use('google', new GoogleStrategy({
         clientID: process.env.GOOGLE_CLIENT_ID,
@@ -56,6 +57,7 @@ if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
 if (process.env.GITHUB_CLIENT_ID && process.env.GITHUB_CLIENT_SECRET) {
     const githubCallbackURL = `${urls.getServerUrl()}/api/auth/github/callback`;
     logger.info(`[OAuth] GitHub callback URL: ${githubCallbackURL}`);
+    logger.info(`[OAuth] Environment: NODE_ENV=${process.env.NODE_ENV}, VERCEL=${process.env.VERCEL}, VERCEL_URL=${process.env.VERCEL_URL}`);
     
     passport.use('github', new GitHubStrategy({
         clientID: process.env.GITHUB_CLIENT_ID,

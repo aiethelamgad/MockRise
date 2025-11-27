@@ -52,17 +52,22 @@ https://mock-rise-server.vercel.app/api/auth/github/callback
 - GitHub allows only **one** callback URL per app
 - The URL must match **exactly**
 
-### Step 4: Verify Environment Variables
+### Step 4: Set Environment Variables in Vercel
 
-Ensure your server has the correct environment variables set in Vercel:
+**Important:** The server needs to know it's in production. Set these in Vercel:
 
 **In Vercel Dashboard → Server Project → Environment Variables:**
 
 ```
+NODE_ENV=production
 BACKEND_URL=https://mock-rise-server.vercel.app
 ```
 
-Or let it use the default (it will automatically use `https://mock-rise-server.vercel.app` in production).
+**Why both?**
+- `NODE_ENV=production` - Ensures production mode is detected
+- `BACKEND_URL` - Explicitly sets the server URL (recommended)
+
+**Note:** Vercel automatically sets `VERCEL=1` and `VERCEL_URL`, but it's better to be explicit with `BACKEND_URL`.
 
 ### Step 5: Redeploy Server
 
