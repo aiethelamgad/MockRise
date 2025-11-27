@@ -36,15 +36,19 @@ const oauthSuccessHandler = (req, res) => {
     const token = tokenService.createToken(req.user);
     tokenService.setTokenCookie(res, token);
     
+    // For cross-origin deployments, pass token in URL so frontend can store it
+    // Frontend will extract token and remove it from URL for security
+    const tokenParam = encodeURIComponent(token);
+    
     // Check if user needs role selection (new OAuth user without role)
     if (req.user.oauthRolePending) {
-        // Redirect to role selection page
-        return res.redirect(`${frontendUrl}/oauth/select-role`);
+        // Redirect to role selection page with token
+        return res.redirect(`${frontendUrl}/oauth/select-role?token=${tokenParam}`);
     }
 
     // User already has a role, proceed with normal redirect
     const redirectPath = tokenService.getRedirectPath(req.user.role, req.user.status);
-    res.redirect(`${frontendUrl}${redirectPath}`);
+    res.redirect(`${frontendUrl}${redirectPath}?token=${tokenParam}`);
 };
 
 // Email/Password routes

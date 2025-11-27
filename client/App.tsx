@@ -2,6 +2,7 @@ import { AuthProvider } from '@/contexts/AuthContext';
 import { NotificationProvider } from '@/contexts/NotificationContext';
 import { ErrorBoundary } from '@/components/common/ErrorBoundary';
 import { AuthRedirectHandler } from '@/components/auth/AuthRedirectHandler';
+import { OAuthTokenHandler } from '@/components/auth/OAuthTokenHandler';
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +22,7 @@ const App = () => (
             <TooltipProvider>
               <Toaster />
               <Sonner />
+              <OAuthTokenHandler />
               <AuthRedirectHandler />
               <AppRoutes />
             </TooltipProvider>

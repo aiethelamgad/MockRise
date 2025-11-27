@@ -15,7 +15,8 @@ import { uploadService } from '@/services/upload.service';
 
 export default function OAuthRoleSelection() {
   const navigate = useNavigate();
-  const { user, loading: authLoading } = useAuth();
+  const [searchParams] = useSearchParams();
+  const { user, loading: authLoading, fetchUser } = useAuth();
   const [selectedRole, setSelectedRole] = useState<'trainee' | 'interviewer' | null>(null);
   const [isAssigning, setIsAssigning] = useState(false);
   
@@ -25,6 +26,21 @@ export default function OAuthRoleSelection() {
   const [linkedinUrl, setLinkedinUrl] = useState('');
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Extract and store OAuth token from URL
+  useEffect(() => {
+    const token = searchParams.get('token');
+    if (token && typeof window !== 'undefined') {
+      localStorage.setItem('auth_token', token);
+      // Remove token from URL
+      const newSearchParams = new URLSearchParams(searchParams);
+      newSearchParams.delete('token');
+      const newSearch = newSearchParams.toString();
+      navigate(newSearch ? `?${newSearch}` : '', { replace: true });
+      // Fetch user data now that we have the token
+      fetchUser();
+    }
+  }, [searchParams, navigate, fetchUser]);
 
   // Redirect if user doesn't need role selection
   useEffect(() => {
@@ -129,13 +145,19 @@ export default function OAuthRoleSelection() {
       const response = await authService.assignRole(roleData);
       
       if (response.success) {
+        // Store token in localStorage if provided
+        if (response.token && typeof window !== 'undefined') {
+          localStorage.setItem('auth_token', response.token);
+        }
+        
         toast.success(`Role assigned successfully! Welcome as a ${selectedRole}.`);
         
         // Refresh user data and redirect
         // The redirect path is provided by the backend
         if (response.redirect) {
-          // Reload page to refresh auth context with new role
-          window.location.href = response.redirect;
+          navigate(response.redirect, { replace: true });
+          // Fetch user data to update context
+          fetchUser();
         } else {
           // Fallback redirect
           if (selectedRole === 'interviewer') {
