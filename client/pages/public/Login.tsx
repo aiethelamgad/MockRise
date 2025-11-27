@@ -295,6 +295,11 @@ export default function Login() {
 
       } else {
         redirectPath = await login(formData.email, formData.password);
+        
+        // Wait a brief moment for user state to update after login
+        // This ensures the user context is properly set before navigation
+        await new Promise(resolve => setTimeout(resolve, 50));
+        
         // Don't show welcome message if user is rejected (they'll see rejection notice)
         // Check the redirect path to determine if user is rejected
         if (redirectPath !== '/rejected-notice') {
@@ -303,12 +308,19 @@ export default function Login() {
         
         // Navigate based on the redirect path from backend (handles interviewer status)
         // Rejected interviewers should ALWAYS be redirected to rejected notice page
-        if (redirectPath) {
-          navigate(redirectPath);
+        if (redirectPath && redirectPath.trim() !== '') {
+          navigate(redirectPath, { replace: true });
         } else {
-          // Fallback: navigate based on user role from context
-          const dashboardPath = getDashboardPath(user?.role || 'trainee');
-          navigate(dashboardPath);
+          // Fallback: use updated user from context (should be available after login)
+          // The login function now updates user state immediately, so it should be available
+          const currentUser = user;
+          if (currentUser?.role) {
+            const dashboardPath = getDashboardPath(currentUser.role);
+            navigate(dashboardPath, { replace: true });
+          } else {
+            // Last resort: navigate to trainee dashboard
+            navigate(ROUTES.TRAINEE_DASHBOARD, { replace: true });
+          }
         }
       }
 

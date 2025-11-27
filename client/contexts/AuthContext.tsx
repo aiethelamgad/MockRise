@@ -134,8 +134,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // This ensures we have the latest user state
     if (data.user) {
       hasFetchedRef.current = true;
-      // Fetch user data to ensure consistency
-      await fetchUser();
+      // Update user state immediately from login response
+      setUser({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role,
+        status: data.user.status,
+        permissions: data.user.permissions || [],
+        isApproved: data.user.isApproved,
+        oauthRolePending: false, // Login users don't have pending OAuth roles
+      });
+      // Also fetch user data to ensure consistency (runs in background)
+      fetchUser().catch(() => {
+        // Silently handle fetch errors - we already have user data from login
+      });
     }
 
     return data.redirect;
@@ -148,8 +161,21 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     // This ensures we have the latest user state
     if (data.user) {
       hasFetchedRef.current = true;
-      // Fetch user data to ensure consistency
-      await fetchUser();
+      // Update user state immediately from registration response
+      setUser({
+        id: data.user.id,
+        name: data.user.name,
+        email: data.user.email,
+        role: data.user.role,
+        status: data.user.status,
+        permissions: data.user.permissions || [],
+        isApproved: data.user.isApproved,
+        oauthRolePending: false, // Registration users don't have pending OAuth roles
+      });
+      // Also fetch user data to ensure consistency (runs in background)
+      fetchUser().catch(() => {
+        // Silently handle fetch errors - we already have user data from registration
+      });
     }
 
     return data.redirect;
