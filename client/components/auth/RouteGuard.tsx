@@ -20,8 +20,12 @@ export function RouteGuard({ children, requiredRoles }: RouteGuardProps) {
     }
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (loading) {
-    // You can render a loading spinner here
+  // Check if there's a token in localStorage but user isn't loaded yet
+  // This handles OAuth flow where token is being processed
+  const hasToken = typeof window !== 'undefined' && localStorage.getItem('auth_token');
+  
+  if (loading || (hasToken && !user)) {
+    // Wait for auth to finish loading, especially during OAuth token processing
     return null;
   }
 

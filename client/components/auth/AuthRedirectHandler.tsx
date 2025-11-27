@@ -29,6 +29,7 @@ export function AuthRedirectHandler() {
     }
 
     // Wait for auth to finish loading
+    // This includes waiting for OAuth token processing
     if (loading) return;
 
     // Only redirect if user is authenticated

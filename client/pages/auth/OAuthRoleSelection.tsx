@@ -27,20 +27,8 @@ export default function OAuthRoleSelection() {
   const [resumeFile, setResumeFile] = useState<File | null>(null);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Extract and store OAuth token from URL
-  useEffect(() => {
-    const token = searchParams.get('token');
-    if (token && typeof window !== 'undefined') {
-      localStorage.setItem('auth_token', token);
-      // Remove token from URL
-      const newSearchParams = new URLSearchParams(searchParams);
-      newSearchParams.delete('token');
-      const newSearch = newSearchParams.toString();
-      navigate(newSearch ? `?${newSearch}` : '', { replace: true });
-      // Fetch user data now that we have the token
-      fetchUser();
-    }
-  }, [searchParams, navigate, fetchUser]);
+  // Note: Token extraction is handled by OAuthTokenHandler in App.tsx
+  // This ensures token is processed before any redirect logic runs
 
   // Redirect if user doesn't need role selection
   useEffect(() => {
