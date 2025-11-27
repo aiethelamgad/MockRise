@@ -1,8 +1,8 @@
 /**
  * Environment configuration
  * 
- * In production (Vercel), frontend and backend are on the same domain,
- * so we use relative URLs to avoid DNS_HOSTNAME_RESOLVED_PRIVATE errors.
+ * For separate deployments (frontend and backend on different domains),
+ * set VITE_API_URL to the full server URL (e.g., https://mock-rise-server.vercel.app/api)
  * 
  * In development, we use localhost with explicit ports.
  */
@@ -16,9 +16,10 @@ const envApiUrl = import.meta.env.VITE_API_URL;
 let apiUrl: string;
 if (envApiUrl) {
     // If explicitly set, use it (allows for custom API domains)
-    apiUrl = envApiUrl;
+    // Should be full URL: https://mock-rise-server.vercel.app/api
+    apiUrl = envApiUrl.endsWith('/api') ? envApiUrl : `${envApiUrl}/api`;
 } else if (isProduction) {
-    // In production, use relative URL (same domain as frontend)
+    // In production, if no env var set, assume same domain (monorepo deployment)
     // This prevents DNS_HOSTNAME_RESOLVED_PRIVATE errors on Vercel
     apiUrl = '/api';
 } else {
