@@ -3,10 +3,18 @@ import type { Config } from "tailwindcss";
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
+    "./index.html",
+    "./*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
-    "./client/**/*.{ts,tsx}",
+    "./pages/**/*.{ts,tsx}",
+    "./routes/**/*.{ts,tsx}",
+    "./contexts/**/*.{ts,tsx}",
+    "./hooks/**/*.{ts,tsx}",
+    "./lib/**/*.{ts,tsx}",
+    "./services/**/*.{ts,tsx}",
+    "./config/**/*.{ts,tsx}",
+    "./types/**/*.{ts,tsx}",
+    "./utils/**/*.{ts,tsx}",
   ],
   prefix: "",
   theme: {
@@ -135,3 +143,4 @@ export default {
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
+
