@@ -3,9 +3,20 @@ const mongoose = require('mongoose');
 /**
  * Connect to MongoDB
  * Returns connection info on success
+ * Serverless-friendly: Reuses existing connection if available
  */
 const connectDB = async () => {
     try {
+        // Check if already connected (important for serverless functions)
+        if (mongoose.connection.readyState === 1) {
+            // Already connected, return existing connection info
+            return {
+                success: true,
+                host: mongoose.connection.host,
+                name: mongoose.connection.name,
+            };
+        }
+        
         // Get MongoDB URI from environment variable
         // In Vercel, this is set in Environment Variables
         // NEVER expose this to the frontend - backend only!
@@ -43,7 +54,13 @@ const connectDB = async () => {
         console.log('');
         console.log(`MongoDB connection error: ${err.message}`);
         console.log('');
-        process.exit(1);
+        // In serverless, don't exit process - throw error instead
+        // process.exit(1) is only for traditional server startup
+        if (process.env.VERCEL) {
+            throw err; // Let serverless handler deal with it
+        } else {
+            process.exit(1); // Traditional server can exit
+        }
     }
 };
 
