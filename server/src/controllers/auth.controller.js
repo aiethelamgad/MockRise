@@ -240,10 +240,16 @@ exports.assignRole = asyncHandler(async (req, res, next) => {
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
     const { email } = req.body;
 
+    // Log request for debugging (in development)
+    if (process.env.NODE_ENV === 'development') {
+        console.log('[Auth] Forgot password request:', { email: email ? 'provided' : 'missing', bodyKeys: Object.keys(req.body) });
+    }
+
     if (!email) {
         return res.status(400).json({
             success: false,
             error: 'Email is required',
+            message: 'Email is required',
         });
     }
 

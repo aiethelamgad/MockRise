@@ -5,7 +5,7 @@ import { EnhancedButton } from "@/components/ui/enhanced-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
-import { Sparkles, Mail, ArrowLeft, CheckCircle2, Github } from "lucide-react";
+import { Sparkles, Mail, ArrowLeft, CheckCircle2 } from "lucide-react";
 import { toast } from "sonner";
 import { AuthBackground } from "@/components/auth/auth-background";
 import { GlassCard } from "@/components/ui/glass-card";
@@ -17,7 +17,6 @@ export default function ForgotPassword() {
   const [isLoading, setIsLoading] = useState(false);
   const [isEmailSent, setIsEmailSent] = useState(false);
   const [resendCooldown, setResendCooldown] = useState(0);
-  const [oauthProviders, setOauthProviders] = useState<string[]>([]);
 
   useEffect(() => {
     if (resendCooldown <= 0) return;
@@ -56,23 +55,11 @@ export default function ForgotPassword() {
       } else {
         // Handle OAuth account error
         if (response.error === 'oauth_account') {
-          const errorMessage = response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.";
-          setApiError(errorMessage);
-          toast.error(errorMessage);
-          
-          // Extract OAuth providers from error message
-          const providers: string[] = [];
-          if (errorMessage.toLowerCase().includes('google')) providers.push('google');
-          if (errorMessage.toLowerCase().includes('github')) providers.push('github');
-          // If no specific providers found, show both as fallback
-          if (providers.length === 0) {
-            providers.push('google', 'github');
-          }
-          setOauthProviders(providers);
+          setApiError(response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.");
+          toast.error(response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.");
         } else {
           setApiError(response.message || "An error occurred. Please try again.");
           toast.error(response.message || "An error occurred. Please try again.");
-          setOauthProviders([]);
         }
       }
     } catch (error: any) {
@@ -80,24 +67,25 @@ export default function ForgotPassword() {
       
       // Check if error has response data (from API client)
       const responseData = error.responseData || {};
-      const errorMessage = responseData.message || error.message || "An error occurred. Please try again.";
+      const errorMessage = responseData.message || responseData.error || error.message || "An error occurred. Please try again.";
+      
+      // Log error for debugging
+      console.error('[ForgotPassword] Error:', {
+        statusCode: error.statusCode,
+        responseData,
+        errorMessage: error.message,
+      });
       
       // Handle OAuth account error
       if (responseData.error === 'oauth_account' || errorMessage.includes('OAuth') || errorMessage.includes('oauth_account')) {
         setApiError(errorMessage);
         toast.error(errorMessage);
-        
-        // Extract OAuth providers from error message
-        const providers: string[] = [];
-        if (errorMessage.toLowerCase().includes('google')) providers.push('google');
-        if (errorMessage.toLowerCase().includes('github')) providers.push('github');
-        // If no specific providers found, show both as fallback
-        if (providers.length === 0) {
-          providers.push('google', 'github');
-        }
-        setOauthProviders(providers);
-      } else if (error.statusCode === 400 || error.statusCode === 500) {
-        // Handle other API errors
+      } else if (error.statusCode === 400) {
+        // Handle 400 errors (validation errors, OAuth accounts, etc.)
+        setApiError(errorMessage);
+        toast.error(errorMessage);
+      } else if (error.statusCode === 500) {
+        // Handle server errors
         setApiError(errorMessage);
         toast.error(errorMessage);
       } else {
@@ -132,19 +120,8 @@ export default function ForgotPassword() {
         setApiError(null); // Clear any previous errors
       } else {
         if (response.error === 'oauth_account') {
-          const errorMessage = response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.";
-          setApiError(errorMessage);
-          toast.error(errorMessage);
-          
-          // Extract OAuth providers from error message
-          const providers: string[] = [];
-          if (errorMessage.toLowerCase().includes('google')) providers.push('google');
-          if (errorMessage.toLowerCase().includes('github')) providers.push('github');
-          // If no specific providers found, show both as fallback
-          if (providers.length === 0) {
-            providers.push('google', 'github');
-          }
-          setOauthProviders(providers);
+          setApiError(response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.");
+          toast.error(response.message || "This email is associated with an OAuth account. Please sign in using your OAuth provider.");
         } else {
           setApiError(response.message || "An error occurred. Please try again.");
           toast.error(response.message || "An error occurred. Please try again.");
@@ -161,16 +138,6 @@ export default function ForgotPassword() {
       if (responseData.error === 'oauth_account' || errorMessage.includes('OAuth') || errorMessage.includes('oauth_account')) {
         setApiError(errorMessage);
         toast.error(errorMessage);
-        
-        // Extract OAuth providers from error message
-        const providers: string[] = [];
-        if (errorMessage.toLowerCase().includes('google')) providers.push('google');
-        if (errorMessage.toLowerCase().includes('github')) providers.push('github');
-        // If no specific providers found, show both as fallback
-        if (providers.length === 0) {
-          providers.push('google', 'github');
-        }
-        setOauthProviders(providers);
       } else {
         setApiError("Failed to send password reset email. Please try again.");
         toast.error("Failed to send password reset email. Please try again.");
@@ -281,7 +248,6 @@ export default function ForgotPassword() {
                     onChange={(e) => {
                       setEmail(e.target.value);
                       setApiError(null); // Clear error when user types
-                      setOauthProviders([]); // Clear OAuth providers when user types
                     }}
                     required
                     aria-required
@@ -290,41 +256,8 @@ export default function ForgotPassword() {
                   />
                 </div>
                 {apiError && (
-                  <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20 space-y-3">
+                  <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-md border border-destructive/20">
                     <p>{apiError}</p>
-                    {oauthProviders.length > 0 && (
-                      <div className="pt-2 space-y-2">
-                        <p className="text-xs text-muted-foreground">Sign in with your OAuth provider:</p>
-                        <div className="flex flex-col gap-2">
-                          {oauthProviders.includes('google') && (
-                            <EnhancedButton
-                              type="button"
-                              variant="outline"
-                              className="w-full flex items-center gap-2"
-                              onClick={() => {
-                                window.location.href = authService.getOAuthUrl('google');
-                              }}
-                            >
-                              <img src="/google-icon.svg" alt="Google" className="h-4 w-4" />
-                              Sign in with Google
-                            </EnhancedButton>
-                          )}
-                          {oauthProviders.includes('github') && (
-                            <EnhancedButton
-                              type="button"
-                              variant="outline"
-                              className="w-full flex items-center gap-2"
-                              onClick={() => {
-                                window.location.href = authService.getOAuthUrl('github');
-                              }}
-                            >
-                              <Github className="h-4 w-4" />
-                              Sign in with GitHub
-                            </EnhancedButton>
-                          )}
-                        </div>
-                      </div>
-                    )}
                   </div>
                 )}
               </div>

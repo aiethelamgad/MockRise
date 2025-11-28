@@ -49,7 +49,16 @@ class ApiClient {
                 return {} as T;
             }
 
-            const data = await response.json();
+            let data;
+            try {
+                data = await response.json();
+            } catch (jsonError) {
+                // If response is not JSON, create a generic error
+                const error = new Error(`HTTP error! status: ${response.status}`);
+                (error as any).responseData = { error: `Server returned status ${response.status}` };
+                (error as any).statusCode = response.status;
+                throw error;
+            }
 
             if (!response.ok) {
                 // Handle 401 Unauthorized - user needs to re-authenticate
@@ -60,7 +69,9 @@ class ApiClient {
                 }
 
                 // Create error with full response data for better error handling
-                const error = new Error(data.message || data.error || 'An error occurred');
+                // Prioritize message, then error field, then status text
+                const errorMessage = data.message || data.error || response.statusText || 'An error occurred';
+                const error = new Error(errorMessage);
                 // Attach response data to error object for easier access
                 (error as any).responseData = data;
                 (error as any).statusCode = response.status;
