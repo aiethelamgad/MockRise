@@ -153,13 +153,31 @@ export const userService = {
         const queryString = queryParams.toString();
         const url = queryString ? `${API_ENDPOINTS.users.export}?${queryString}` : API_ENDPOINTS.users.export;
 
+        // Get token from localStorage for authentication
+        const token = typeof window !== 'undefined' ? localStorage.getItem('auth_token') : null;
+
+        const headers: HeadersInit = {};
+        if (token) {
+            headers['Authorization'] = `Bearer ${token}`;
+        }
+
         const response = await fetch(`${config.apiUrl}${url}`, {
             method: 'GET',
             credentials: 'include',
+            headers,
         });
 
         if (!response.ok) {
-            throw new Error('Failed to export users');
+            const errorText = await response.text();
+            let errorMessage = 'Failed to export users';
+            try {
+                const errorData = JSON.parse(errorText);
+                errorMessage = errorData.error || errorData.message || errorMessage;
+            } catch {
+                // If not JSON, use the text or default message
+                errorMessage = errorText || errorMessage;
+            }
+            throw new Error(errorMessage);
         }
 
         return response.blob();
