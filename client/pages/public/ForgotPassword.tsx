@@ -45,6 +45,9 @@ export default function ForgotPassword() {
 
     setIsLoading(true);
 
+    // Debug: Log the email being sent
+    console.log('[ForgotPassword] Submitting email:', email);
+
     try {
       const response = await authService.forgotPassword(email);
       
@@ -67,21 +70,28 @@ export default function ForgotPassword() {
       
       // Check if error has response data (from API client)
       const responseData = error.responseData || {};
-      const errorMessage = responseData.message || responseData.error || error.message || "An error occurred. Please try again.";
       
-      // Log error for debugging
-      console.error('[ForgotPassword] Error:', {
+      // Extract error message with priority: responseData.message > responseData.error > error.message
+      let errorMessage = responseData.message || responseData.error || error.message || "An error occurred. Please try again.";
+      
+      // Log error for debugging (stringify to see full object)
+      console.error('[ForgotPassword] Error details:', JSON.stringify({
         statusCode: error.statusCode,
         responseData,
         errorMessage: error.message,
-      });
+        fullError: error,
+      }, null, 2));
       
       // Handle OAuth account error
-      if (responseData.error === 'oauth_account' || errorMessage.includes('OAuth') || errorMessage.includes('oauth_account')) {
+      if (responseData.error === 'oauth_account' || errorMessage.toLowerCase().includes('oauth') || errorMessage.toLowerCase().includes('google') || errorMessage.toLowerCase().includes('github')) {
         setApiError(errorMessage);
         toast.error(errorMessage);
       } else if (error.statusCode === 400) {
         // Handle 400 errors (validation errors, OAuth accounts, etc.)
+        // If no specific message, use a generic one
+        if (!errorMessage || errorMessage === 'An error occurred. Please try again.') {
+          errorMessage = responseData.error || 'Invalid request. Please check your email and try again.';
+        }
         setApiError(errorMessage);
         toast.error(errorMessage);
       } else if (error.statusCode === 500) {
@@ -132,10 +142,19 @@ export default function ForgotPassword() {
       
       // Check if error has response data (from API client)
       const responseData = error.responseData || {};
-      const errorMessage = responseData.message || error.message || "An error occurred. Please try again.";
+      
+      // Extract error message with priority: responseData.message > responseData.error > error.message
+      let errorMessage = responseData.message || responseData.error || error.message || "An error occurred. Please try again.";
+      
+      // Log error for debugging
+      console.error('[ForgotPassword] Resend error:', JSON.stringify({
+        statusCode: error.statusCode,
+        responseData,
+        errorMessage: error.message,
+      }, null, 2));
       
       // Handle OAuth account error
-      if (responseData.error === 'oauth_account' || errorMessage.includes('OAuth') || errorMessage.includes('oauth_account')) {
+      if (responseData.error === 'oauth_account' || errorMessage.toLowerCase().includes('oauth') || errorMessage.toLowerCase().includes('google') || errorMessage.toLowerCase().includes('github')) {
         setApiError(errorMessage);
         toast.error(errorMessage);
       } else {

@@ -92,6 +92,11 @@ class ApiClient {
     }
 
     async post<T>(endpoint: string, data?: any, options?: RequestInit): Promise<T> {
+        // Debug: Log request data in development
+        if (process.env.NODE_ENV === 'development' || typeof window !== 'undefined') {
+            console.log('[API Client] POST request:', { endpoint, data });
+        }
+        
         return this.request<T>(endpoint, {
             ...options,
             method: 'POST',
