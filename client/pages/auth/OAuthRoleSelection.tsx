@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { ROUTES } from '@/routes/routes.config';
+import { getDashboardPath } from '@/utils/routing';
 import { motion } from 'framer-motion';
 import { EnhancedCard } from '@/components/ui/enhanced-card';
 import { EnhancedButton } from '@/components/ui/enhanced-button';
@@ -36,7 +38,7 @@ export default function OAuthRoleSelection() {
     
     if (!user) {
       // User not authenticated - redirect to login
-      navigate('/login', { replace: true });
+      navigate(ROUTES.LOGIN, { replace: true });
       return;
     }
 
@@ -44,12 +46,12 @@ export default function OAuthRoleSelection() {
     if (!user.oauthRolePending) {
       // User already has a role - redirect to appropriate dashboard
       if (user.role === 'interviewer' && user.status === 'pending_verification') {
-        navigate('/pending-verification', { replace: true });
+        navigate(ROUTES.PENDING_VERIFICATION, { replace: true });
       } else if (user.role === 'interviewer' && user.status === 'rejected') {
-        navigate('/rejected-notice', { replace: true });
+        navigate(ROUTES.REJECTED_NOTICE, { replace: true });
       } else {
-        const rolePath = user.role === 'super_admin' ? 'admin' : user.role;
-        navigate(`/dashboard/${rolePath}`, { replace: true });
+        const dashboardPath = getDashboardPath(user.role);
+        navigate(dashboardPath, { replace: true });
       }
     }
   }, [user, authLoading, navigate]);
@@ -149,9 +151,9 @@ export default function OAuthRoleSelection() {
         } else {
           // Fallback redirect
           if (selectedRole === 'interviewer') {
-            navigate('/pending-verification', { replace: true });
+            navigate(ROUTES.PENDING_VERIFICATION, { replace: true });
           } else {
-            navigate('/dashboard/trainee', { replace: true });
+            navigate(ROUTES.TRAINEE_DASHBOARD, { replace: true });
           }
         }
       }

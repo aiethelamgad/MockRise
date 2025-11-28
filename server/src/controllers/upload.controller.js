@@ -35,10 +35,21 @@ exports.uploadResume = asyncHandler(async (req, res, next) => {
  * @access  Private (Admin only)
  */
 exports.getResume = asyncHandler(async (req, res, next) => {
+  // For Vercel serverless functions, use /tmp directory (only writable location)
+  // For local development, use the uploads directory
+  const isVercel = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+  const uploadsDir = isVercel 
+    ? path.resolve('/tmp/uploads/resumes')
+    : path.resolve(path.join(__dirname, '../../uploads/resumes'));
+  
   // Ensure uploads directory exists
-  const uploadsDir = path.resolve(path.join(__dirname, '../../uploads/resumes'));
-  if (!fs.existsSync(uploadsDir)) {
-    fs.mkdirSync(uploadsDir, { recursive: true });
+  try {
+    if (!fs.existsSync(uploadsDir)) {
+      fs.mkdirSync(uploadsDir, { recursive: true });
+    }
+  } catch (error) {
+    console.error('Failed to create uploads directory:', error.message);
+    // In serverless, /tmp should always exist, but handle gracefully
   }
 
   // Extract filename from regex route match
